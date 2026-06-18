@@ -39,6 +39,7 @@ npm run build    # сборка в папку dist/
 ## 📬 Контакты
 
 - **Email:** erykahval1997@gmail.com
+- **Телефон:** +7 (999) 795-78-30
 - **GitHub:** https://github.com/oxygen1997
 
 ---
