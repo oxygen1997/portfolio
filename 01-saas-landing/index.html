@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Nebula — платформа аналитики для растущих команд. Дашборды, отчёты и метрики в реальном времени." />
+  <title>Nebula — аналитика для растущих команд</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#" class="logo">
+        <span class="logo__mark" aria-hidden="true"></span>
+        Nebula
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#features" class="nav__link">Возможности</a>
+        <a href="#how" class="nav__link">Как работает</a>
+        <a href="#pricing" class="nav__link">Тарифы</a>
+        <a href="#faq" class="nav__link">FAQ</a>
+      </nav>
+      <div class="header__actions">
+        <a href="#" class="btn btn--ghost">Войти</a>
+        <a href="#pricing" class="btn btn--primary">Попробовать бесплатно</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <div class="hero__content" data-reveal>
+          <span class="badge">✦ Новое: AI-инсайты в отчётах</span>
+          <h1 class="hero__title">Аналитика, которая<br />работает за вас</h1>
+          <p class="hero__lead">
+            Собирайте данные из всех источников, стройте дашборды за минуты
+            и принимайте решения на основе цифр, а не догадок.
+          </p>
+          <div class="hero__cta">
+            <a href="#pricing" class="btn btn--primary btn--lg">Начать бесплатно</a>
+            <a href="#how" class="btn btn--ghost btn--lg">Как это работает →</a>
+          </div>
+          <div class="hero__trust">
+            <span>Нам доверяют 2 000+ команд</span>
+            <div class="hero__logos">
+              <span>Acme</span><span>Globex</span><span>Initech</span><span>Umbrella</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero__visual" data-reveal>
+          <div class="dashboard">
+            <div class="dashboard__top">
+              <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+            </div>
+            <div class="dashboard__body">
+              <div class="stat-cards">
+                <div class="stat">
+                  <span class="stat__label">Выручка</span>
+                  <span class="stat__value">₽1.24M</span>
+                  <span class="stat__delta stat__delta--up">▲ 12.5%</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Пользователи</span>
+                  <span class="stat__value">18 240</span>
+                  <span class="stat__delta stat__delta--up">▲ 8.1%</span>
+                </div>
+                <div class="stat">
+                  <span class="stat__label">Отток</span>
+                  <span class="stat__value">2.3%</span>
+                  <span class="stat__delta stat__delta--down">▼ 0.4%</span>
+                </div>
+              </div>
+              <div class="chart">
+                <div class="chart__bars">
+                  <span style="--h: 45%"></span>
+                  <span style="--h: 62%"></span>
+                  <span style="--h: 38%"></span>
+                  <span style="--h: 78%"></span>
+                  <span style="--h: 55%"></span>
+                  <span style="--h: 90%"></span>
+                  <span style="--h: 70%"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">Возможности</span>
+          <h2 class="section__title">Всё для работы с данными</h2>
+          <p class="section__subtitle">Один инструмент вместо десяти разрозненных.</p>
+        </div>
+        <div class="grid grid--3">
+          <article class="card" data-reveal>
+            <div class="card__icon">📊</div>
+            <h3 class="card__title">Дашборды без кода</h3>
+            <p class="card__text">Перетаскивайте виджеты и собирайте отчёты мышкой. Никакого SQL.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="card__icon">⚡</div>
+            <h3 class="card__title">Реальное время</h3>
+            <p class="card__text">Метрики обновляются мгновенно — видите изменения по мере их появления.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="card__icon">🔗</div>
+            <h3 class="card__title">50+ интеграций</h3>
+            <p class="card__text">Подключайте базы, CRM, рекламные кабинеты и таблицы в пару кликов.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="card__icon">🤖</div>
+            <h3 class="card__title">AI-инсайты</h3>
+            <p class="card__text">Алгоритмы сами находят аномалии и подсказывают, на что обратить внимание.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="card__icon">🔐</div>
+            <h3 class="card__title">Безопасность</h3>
+            <p class="card__text">Шифрование, роли доступа и журнал действий для всей команды.</p>
+          </article>
+          <article class="card" data-reveal>
+            <div class="card__icon">📱</div>
+            <h3 class="card__title">Любые устройства</h3>
+            <p class="card__text">Полноценная работа в браузере, на планшете и телефоне.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section section--alt" id="how">
+      <div class="container">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">Как работает</span>
+          <h2 class="section__title">Запуск за три шага</h2>
+        </div>
+        <div class="steps">
+          <div class="step" data-reveal>
+            <span class="step__num">01</span>
+            <h3 class="step__title">Подключите источники</h3>
+            <p class="step__text">Добавьте данные из CRM, базы или таблиц за пару минут.</p>
+          </div>
+          <div class="step" data-reveal>
+            <span class="step__num">02</span>
+            <h3 class="step__title">Соберите дашборд</h3>
+            <p class="step__text">Выберите метрики и визуализации — готовый отчёт за минуты.</p>
+          </div>
+          <div class="step" data-reveal>
+            <span class="step__num">03</span>
+            <h3 class="step__title">Делитесь и решайте</h3>
+            <p class="step__text">Откройте доступ команде и принимайте решения на основе цифр.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">Тарифы</span>
+          <h2 class="section__title">Честные цены</h2>
+          <p class="section__subtitle">Начните бесплатно. Платите только когда выросли.</p>
+        </div>
+        <div class="grid grid--3 pricing">
+          <article class="plan" data-reveal>
+            <h3 class="plan__name">Старт</h3>
+            <p class="plan__price">0 ₽<span>/мес</span></p>
+            <p class="plan__desc">Для личных проектов</p>
+            <ul class="plan__list">
+              <li>До 3 дашбордов</li>
+              <li>2 источника данных</li>
+              <li>Базовые графики</li>
+            </ul>
+            <a href="#" class="btn btn--ghost btn--block">Выбрать</a>
+          </article>
+          <article class="plan plan--featured" data-reveal>
+            <span class="plan__tag">Популярный</span>
+            <h3 class="plan__name">Команда</h3>
+            <p class="plan__price">1 990 ₽<span>/мес</span></p>
+            <p class="plan__desc">Для растущих команд</p>
+            <ul class="plan__list">
+              <li>Безлимит дашбордов</li>
+              <li>20 источников данных</li>
+              <li>AI-инсайты</li>
+              <li>Совместный доступ</li>
+            </ul>
+            <a href="#" class="btn btn--primary btn--block">Выбрать</a>
+          </article>
+          <article class="plan" data-reveal>
+            <h3 class="plan__name">Бизнес</h3>
+            <p class="plan__price">5 990 ₽<span>/мес</span></p>
+            <p class="plan__desc">Для крупных компаний</p>
+            <ul class="plan__list">
+              <li>Всё из «Команды»</li>
+              <li>Безлимит источников</li>
+              <li>Роли и аудит</li>
+              <li>Персональный менеджер</li>
+            </ul>
+            <a href="#" class="btn btn--ghost btn--block">Выбрать</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--alt" id="faq">
+      <div class="container container--narrow">
+        <div class="section__head" data-reveal>
+          <span class="eyebrow">FAQ</span>
+          <h2 class="section__title">Частые вопросы</h2>
+        </div>
+        <div class="faq" data-reveal>
+          <details class="faq__item">
+            <summary class="faq__q">Нужны ли навыки программирования?</summary>
+            <p class="faq__a">Нет. Все дашборды собираются мышкой, без кода и SQL.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">Можно ли отменить подписку?</summary>
+            <p class="faq__a">Да, в любой момент из личного кабинета. Без скрытых условий.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">Где хранятся данные?</summary>
+            <p class="faq__a">В дата-центрах с шифрованием. Доступ настраивается по ролям.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">Есть ли бесплатный период?</summary>
+            <p class="faq__a">Тариф «Старт» бесплатен навсегда, платные — 14 дней пробного доступа.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container cta__inner" data-reveal>
+        <h2 class="cta__title">Готовы видеть данные ясно?</h2>
+        <p class="cta__text">Создайте первый дашборд за 5 минут. Карта не нужна.</p>
+        <a href="#" class="btn btn--primary btn--lg">Начать бесплатно</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="#" class="logo logo--light">
+          <span class="logo__mark" aria-hidden="true"></span>
+          Nebula
+        </a>
+        <p>Аналитика для растущих команд.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Продукт</h4>
+          <a href="#features">Возможности</a>
+          <a href="#pricing">Тарифы</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer__col">
+          <h4>Компания</h4>
+          <a href="#">О нас</a>
+          <a href="#">Блог</a>
+          <a href="#">Карьера</a>
+        </div>
+        <div class="footer__col">
+          <h4>Контакты</h4>
+          <a href="#">hello@nebula.app</a>
+          <a href="#">Telegram</a>
+          <a href="#">Поддержка</a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <span>© 2026 Nebula. Демо-проект для портфолио.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

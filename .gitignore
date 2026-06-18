@@ -1,0 +1,17 @@
+# Зависимости
+node_modules/
+
+# Логи
+*.log
+npm-debug.log*
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Кэш редакторов
+.vscode/
+.idea/
+
+# ВАЖНО: папку 03-react-shop/dist НЕ игнорируем —
+# собранное демо нужно для GitHub Pages.

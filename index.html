@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Портфолио фронтенд-разработчика: лендинги, адаптивная вёрстка, приложения на React." />
+  <title>Портфолио · Фронтенд-разработчик</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1c2230;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --primary: #6c5ce7;
+      --accent: #00d1b2;
+      --border: #2a3038;
+      --radius: 16px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 100px 0 70px;
+      text-align: center;
+      overflow: hidden;
+      background:
+        radial-gradient(700px 350px at 50% -10%, rgba(108, 92, 231, 0.25), transparent),
+        radial-gradient(500px 300px at 80% 10%, rgba(0, 209, 178, 0.12), transparent);
+    }
+    .avatar {
+      width: 92px; height: 92px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px; font-weight: 800; color: #fff;
+      box-shadow: 0 12px 40px rgba(108, 92, 231, 0.5);
+    }
+    .hero h1 { font-size: clamp(32px, 5vw, 50px); font-weight: 900; letter-spacing: -0.03em; }
+    .hero .role {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .hero p.bio {
+      max-width: 560px;
+      margin: 18px auto 28px;
+      color: var(--text-muted);
+      font-size: 17px;
+    }
+    .hero__links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-weight: 600; font-size: 14px;
+      background: var(--surface);
+      transition: transform 0.2s var(--ease), border-color 0.2s, background 0.2s;
+    }
+    .pill:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .pill--primary { background: var(--primary); border-color: var(--primary); }
+
+    /* Skills */
+    .skills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+    .skill {
+      padding: 6px 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+    }
+
+    /* Projects */
+    .section { padding: 70px 0; }
+    .section__title { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .section__sub { color: var(--text-muted); margin-bottom: 40px; }
+    .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .project {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s var(--ease), border-color 0.3s;
+    }
+    .project:hover { transform: translateY(-6px); border-color: var(--primary); }
+    .project__preview {
+      height: 168px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      position: relative;
+    }
+    .project__preview--1 { background: linear-gradient(135deg, #6c5ce7, #00d1b2); }
+    .project__preview--2 { background: linear-gradient(135deg, #6f4e37, #c8862b); }
+    .project__preview--3 { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+    .project__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+    .project__tag { font-size: 12px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .project__title { font-size: 20px; font-weight: 700; margin: 6px 0 8px; }
+    .project__desc { color: var(--text-muted); font-size: 15px; flex: 1; }
+    .project__stack { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0; }
+    .project__stack span { font-size: 12px; padding: 3px 10px; background: var(--surface-2); border-radius: 6px; color: var(--text-muted); }
+    .project__actions { display: flex; gap: 10px; }
+    .btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600; font-size: 14px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s var(--ease), background 0.2s, border-color 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn--demo { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn--code:hover { border-color: var(--primary); }
+
+    /* Footer */
+    .footer { padding: 50px 0; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); font-size: 14px; }
+
+    [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    @media (max-width: 600px) { .hero { padding: 70px 0 50px; } }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="container">
+      <div class="avatar" data-reveal>В</div>
+      <h1 data-reveal>Привет, я Валентина</h1>
+      <span class="role" data-reveal>Фронтенд-разработчик · вёрстка сайтов</span>
+      <p class="bio" data-reveal>
+        Делаю адаптивные лендинги и веб-приложения. Чистый код, аккуратная вёрстка,
+        внимание к деталям. Ниже — мои проекты с живыми демо и исходным кодом.
+      </p>
+      <div class="hero__links" data-reveal>
+        <a href="#projects" class="pill pill--primary">Смотреть работы ↓</a>
+        <a href="https://github.com/" target="_blank" rel="noopener" class="pill" id="gh-link">GitHub</a>
+        <a href="mailto:erykahval1997@gmail.com" class="pill">Написать</a>
+      </div>
+      <div class="skills" data-reveal>
+        <span class="skill">HTML5</span>
+        <span class="skill">CSS3</span>
+        <span class="skill">JavaScript</span>
+        <span class="skill">React</span>
+        <span class="skill">Адаптив</span>
+        <span class="skill">Flexbox / Grid</span>
+        <span class="skill">Vite</span>
+        <span class="skill">Git</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <div class="container">
+      <h2 class="section__title" data-reveal>Проекты</h2>
+      <p class="section__sub" data-reveal>Три работы: две на чистой вёрстке и одна на React.</p>
+      <div class="projects">
+        <article class="project" data-reveal>
+          <div class="project__preview project__preview--1">📊</div>
+          <div class="project__body">
+            <span class="project__tag">Лендинг · HTML/CSS/JS</span>
+            <h3 class="project__title">Nebula — SaaS-аналитика</h3>
+            <p class="project__desc">Современный лендинг продукта: hero, секции возможностей, тарифы, FAQ-аккордеон, скролл-анимации. Полностью адаптивный.</p>
+            <div class="project__stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>IntersectionObserver</span></div>
+            <div class="project__actions">
+              <a href="./01-saas-landing/" class="btn btn--demo">Демо</a>
+              <a href="./01-saas-landing/index.html" class="btn btn--code">Код</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" data-reveal>
+          <div class="project__preview project__preview--2">☕</div>
+          <div class="project__body">
+            <span class="project__tag">Лендинг · HTML/CSS/JS</span>
+            <h3 class="project__title">Тёплый дом — кофейня</h3>
+            <p class="project__desc">Лендинг кофейни с тёплой эстетикой: меню, галерея, отзывы, CSS-анимация чашки кофе. Другой визуальный стиль — показывает диапазон.</p>
+            <div class="project__stack"><span>HTML</span><span>CSS-анимации</span><span>JavaScript</span><span>Grid</span></div>
+            <div class="project__actions">
+              <a href="./02-coffee-landing/" class="btn btn--demo">Демо</a>
+              <a href="./02-coffee-landing/index.html" class="btn btn--code">Код</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" data-reveal>
+          <div class="project__preview project__preview--3">🛍️</div>
+          <div class="project__body">
+            <span class="project__tag">Приложение · React</span>
+            <h3 class="project__title">Маркет — интернет-магазин</h3>
+            <p class="project__desc">SPA на React + Vite: каталог с фильтрами и поиском, корзина с подсчётом суммы и сохранением в localStorage. Компонентная архитектура.</p>
+            <div class="project__stack"><span>React</span><span>Vite</span><span>Hooks</span><span>localStorage</span></div>
+            <div class="project__actions">
+              <a href="./03-react-shop/dist/" class="btn btn--demo">Демо</a>
+              <a href="./03-react-shop/src/" class="btn btn--code">Код</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      © <span id="year">2026</span> Валентина · Фронтенд-разработчик ·
+      <a href="mailto:erykahval1997@gmail.com" style="color: var(--accent)">erykahval1997@gmail.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const els = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    els.forEach((el, i) => { el.style.transitionDelay = (i % 4) * 0.07 + 's'; io.observe(el); });
+
+    // Auto year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
