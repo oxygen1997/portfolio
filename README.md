@@ -2,8 +2,7 @@
 
 Портфолио с примерами вёрстки и веб-разработки. Каждый проект — с живым демо и исходным кодом.
 
-🔗 **Живая витрина:** `https://<твой-github-логин>.github.io/portfolio/`
-*(ссылка заработает после публикации на GitHub Pages — см. ниже)*
+🔗 **Живая витрина:** https://oxygen1997.github.io/portfolio/
 
 ---
 
@@ -40,7 +39,7 @@ npm run build    # сборка в папку dist/
 ## 📬 Контакты
 
 - **Email:** erykahval1997@gmail.com
-- **GitHub:** https://github.com/<твой-логин>
+- **GitHub:** https://github.com/oxygen1997
 
 ---
 
