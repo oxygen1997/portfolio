@@ -13,6 +13,8 @@
 | **Nebula** | Лендинг SaaS-аналитики: hero, тарифы, FAQ-аккордеон, скролл-анимации | HTML, CSS, JavaScript | [/01-saas-landing](./01-saas-landing/) |
 | **Тёплый дом** | Лендинг кофейни: меню, галерея, CSS-анимации | HTML, CSS, JavaScript | [/02-coffee-landing](./02-coffee-landing/) |
 | **Маркет** | Интернет-магазин: каталог, фильтры, корзина | React, Vite, Hooks | [/03-react-shop](./03-react-shop/) |
+| **Пульс** | Лендинг фитнес-клуба: программы, абонементы, тренеры, форма записи | HTML, CSS, JavaScript | [/04-fitness-landing](./04-fitness-landing/) |
+| **Вектор** | Лендинг digital-агентства: услуги, кейсы, процесс, отзывы | HTML, CSS, JavaScript | [/05-agency-landing](./05-agency-landing/) |
 
 ---
 
@@ -24,7 +26,7 @@
 
 ## 🚀 Как запустить локально
 
-**Лендинги** (`01-saas-landing`, `02-coffee-landing`) — просто открой `index.html` в браузере.
+**Лендинги** (`01-saas-landing`, `02-coffee-landing`, `04-fitness-landing`, `05-agency-landing`) — просто открой `index.html` в браузере.
 
 **React-магазин:**
 ```bash

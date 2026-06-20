@@ -115,6 +115,8 @@
     .project__preview--1 { background: linear-gradient(135deg, #6c5ce7, #00d1b2); }
     .project__preview--2 { background: linear-gradient(135deg, #6f4e37, #c8862b); }
     .project__preview--3 { background: linear-gradient(135deg, #2563eb, #4f46e5); }
+    .project__preview--4 { background: linear-gradient(135deg, #14181f, #c2f04a); }
+    .project__preview--5 { background: linear-gradient(135deg, #4f46e5, #06b6d4); }
     .project__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
     .project__tag { font-size: 12px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .project__title { font-size: 20px; font-weight: 700; margin: 6px 0 8px; }
@@ -176,7 +178,7 @@
   <section class="section" id="projects">
     <div class="container">
       <h2 class="section__title" data-reveal>Проекты</h2>
-      <p class="section__sub" data-reveal>Три работы: две на чистой вёрстке и одна на React.</p>
+      <p class="section__sub" data-reveal>Пять работ: четыре на чистой вёрстке и одна на React.</p>
       <div class="projects">
         <article class="project" data-reveal>
           <div class="project__preview project__preview--1">📊</div>
@@ -216,6 +218,34 @@
             <div class="project__actions">
               <a href="./03-react-shop/dist/" class="btn btn--demo">Демо</a>
               <a href="./03-react-shop/src/" class="btn btn--code">Код</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" data-reveal>
+          <div class="project__preview project__preview--4">💪</div>
+          <div class="project__body">
+            <span class="project__tag">Лендинг · HTML/CSS/JS</span>
+            <h3 class="project__title">Пульс — фитнес-клуб</h3>
+            <p class="project__desc">Энергичный лендинг фитнес-клуба: программы, абонементы, тренеры, форма записи. Тёмная тема, лаймовый акцент, адаптив и анимации.</p>
+            <div class="project__stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Адаптив</span></div>
+            <div class="project__actions">
+              <a href="./04-fitness-landing/" class="btn btn--demo">Демо</a>
+              <a href="./04-fitness-landing/index.html" class="btn btn--code">Код</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" data-reveal>
+          <div class="project__preview project__preview--5">🚀</div>
+          <div class="project__body">
+            <span class="project__tag">Лендинг · HTML/CSS/JS</span>
+            <h3 class="project__title">Вектор — digital-агентство</h3>
+            <p class="project__desc">Премиальный лендинг агентства: услуги, кейсы с метриками, процесс, отзывы. Светлая тема, индиго-акцент, градиентные блоки и адаптив.</p>
+            <div class="project__stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Grid</span></div>
+            <div class="project__actions">
+              <a href="./05-agency-landing/" class="btn btn--demo">Демо</a>
+              <a href="./05-agency-landing/index.html" class="btn btn--code">Код</a>
             </div>
           </div>
         </article>
