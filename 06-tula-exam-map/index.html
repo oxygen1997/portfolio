@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Карта экзамена ГИБДД — Курковая 9А, Тула</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    html, body { margin: 0; height: 100%; }
+    #map { position: absolute; inset: 0; }
+
+    .panel {
+      position: absolute; top: 12px; left: 12px; z-index: 1000;
+      background: rgba(255,255,255,0.96); border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      padding: 12px 14px; max-width: 290px; font-size: 13px; line-height: 1.45;
+    }
+    .panel h1 { font-size: 15px; margin: 0 0 6px; }
+    .panel h2 { font-size: 12px; margin: 12px 0 5px; text-transform: uppercase; letter-spacing: .04em; color: #555; }
+    .row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+    .sw { width: 26px; height: 5px; border-radius: 3px; flex: none; }
+    .sw.dash { background-image: repeating-linear-gradient(90deg,#bbb 0 5px,transparent 5px 9px); height: 4px; }
+    .mode { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+    .mode button {
+      flex: 1 1 30%; border: 1px solid #ccc; background: #f4f4f4; border-radius: 8px;
+      padding: 6px 4px; font-size: 12px; cursor: pointer;
+    }
+    .mode button.active { background: #1769ff; color: #fff; border-color: #1769ff; }
+    .penalty-btn {
+      display: block; width: 100%; margin-top: 8px; border: 1px solid #e0a;
+      background: #fff0f6; color: #b1257a; border-radius: 8px; padding: 7px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+    }
+    /* боковая панель штрафных баллов */
+    .penalty {
+      position: absolute; top: 12px; right: 12px; z-index: 1001; display: none;
+      background: rgba(255,255,255,0.97); border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.2); padding: 14px 16px;
+      max-width: 320px; max-height: calc(100% - 24px); overflow-y: auto; font-size: 12.5px; line-height: 1.5;
+    }
+    .penalty.open { display: block; }
+    .penalty h2 { font-size: 14px; margin: 0 0 8px; }
+    .penalty h3 { font-size: 12px; margin: 12px 0 4px; }
+    .penalty ul { margin: 4px 0; padding-left: 18px; }
+    .penalty li { margin: 2px 0; }
+    .penalty .close { position: absolute; top: 8px; right: 12px; cursor: pointer; font-size: 18px; color: #888; }
+    .badge { display:inline-block; border-radius: 5px; padding: 1px 6px; font-size: 11px; font-weight: 700; color:#fff; }
+    .note { font-size: 11px; color: #666; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px; }
+    #status { font-size: 12px; color: #b15; margin-top: 6px; min-height: 16px; }
+    a { color: #1769ff; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="panel">
+    <h1>🚗 Зона экзамена ГИБДД</h1>
+    <div>Автодром / МРЭО: <b>ул. Курковая, 9А</b>, Заречье, Тула.<br>
+    Экзамен в городе — по улицам в радиусе вокруг точки.</div>
+
+    <div class="mode">
+      <button id="btn-speed" class="active">Скорость</button>
+      <button id="btn-prio">Главная</button>
+      <button id="btn-turn">Развороты</button>
+    </div>
+    <button class="penalty-btn" id="open-penalty">📋 Штрафные баллы (чеклист)</button>
+    <button class="penalty-btn" id="export-png" style="border-color:#1769ff;background:#eef4ff;color:#1769ff">⬇️ Скачать карту в PNG</button>
+
+    <div id="legend-speed">
+      <h2>Ограничение скорости</h2>
+      <div class="row"><span class="sw" style="background:#7a2ff7"></span>20 (жилая зона / двор)</div>
+      <div class="row"><span class="sw" style="background:#ff7f00"></span>40</div>
+      <div class="row"><span class="sw" style="background:#2ca02c"></span>60 (по умолч. в городе)</div>
+      <div class="row"><span class="sw" style="background:#1f77b4"></span>70–90</div>
+      <div class="row"><span class="sw dash"></span>нет данных в OSM</div>
+    </div>
+
+    <div id="legend-prio" style="display:none">
+      <h2>Тип дороги (приоритет)</h2>
+      <div class="row"><span class="sw" style="background:#e31a1c"></span>Главные магистрали</div>
+      <div class="row"><span class="sw" style="background:#ff7f00"></span>Главные (вторичные)</div>
+      <div class="row"><span class="sw" style="background:#f5c000"></span>Связующие улицы</div>
+      <div class="row"><span class="sw" style="background:#888"></span>Второстепенные / жилые</div>
+      <div class="row"><span class="sw" style="background:#2ca02c"></span>Жилая зона (20)</div>
+    </div>
+
+    <div id="legend-turn" style="display:none">
+      <h2>Развороты</h2>
+      <div class="row"><span class="sw" style="background:#2ca02c;border-radius:50%;width:12px;height:12px"></span>Светофор/перекрёсток — обычно можно</div>
+      <div class="row"><span class="sw" style="background:#e31a1c;border-radius:50%;width:12px;height:12px"></span>Пешеходный переход — нельзя</div>
+      <div class="row"><span class="sw" style="background:#ff7f00;border-radius:50%;width:12px;height:12px"></span>Остановка — нельзя</div>
+      <div class="row"><span class="sw" style="background:#111;border-radius:50%;width:12px;height:12px"></span>Ж/д переезд — нельзя</div>
+      <div style="font-size:11px;color:#666;margin-top:4px">Разворот — из крайнего левого, уступая встречным. Не на переходе/остановке/мосту/переезде и где видимость &lt;100 м.</div>
+    </div>
+
+    <div id="status">Загружаю данные OSM…</div>
+
+    <div class="note">
+      Данные — из OpenStreetMap (рисуют волонтёры, могут быть неполными).
+      <b>Юридически</b> «главную дорогу» и скорость определяют <b>знаки и разметка на месте</b>,
+      а не цвет на карте. Проверь зону вживую с инструктором «Зебры».
+    </div>
+  </div>
+
+  <div class="penalty" id="penalty">
+    <span class="close" id="close-penalty">×</span>
+    <h2>📋 Штрафные баллы на экзамене</h2>
+    <div style="font-size:11.5px;color:#666">Экзамен «город» — до 60 мин. <b>Набрал 5 и более баллов — не сдал.</b> Грубая ошибка — экзамен прекращают сразу.</div>
+
+    <h3><span class="badge" style="background:#e31a1c">ГРУБЫЕ — сразу не сдал</span></h3>
+    <ul>
+      <li>Не пристёгнут ремень / телефон в руках за рулём</li>
+      <li>Проезд на красный / запрещающий жест регулировщика</li>
+      <li>Не уступил пешеходу (велосипедисту) — создал помеху</li>
+      <li>Не уступил ТС с преимуществом, создал помеху / опасную ситуацию</li>
+      <li>Выезд на встречную, где запрещено / пересёк сплошную</li>
+      <li>Превышение скорости</li>
+      <li>Не выполнил требование знака или разметки</li>
+      <li>Сбил/задел разметочное оборудование, наехал на бордюр; ДТП</li>
+      <li>Действия инструктора/инспектора, чтобы избежать аварии</li>
+    </ul>
+
+    <h3><span class="badge" style="background:#ff7f00">СРЕДНИЕ — 3 балла</span></h3>
+    <ul>
+      <li>Не уступил пешеходу/ТС, когда помехи не создал (но должен был)</li>
+      <li>Нарушил правила остановки/стоянки</li>
+      <li>Не подал сигнал поворотником при манёвре</li>
+      <li>Не занял нужную полосу для поворота/разворота</li>
+    </ul>
+
+    <h3><span class="badge" style="background:#f5c000;color:#333">МЕЛКИЕ — 1 балл</span></h3>
+    <ul>
+      <li>Несвоевременно включил/выключил поворотник</li>
+      <li>Резкое торможение без необходимости / рывки сцепления</li>
+      <li>Двигался слишком медленно без причины, мешая потоку</li>
+      <li>Неуверенно пользовался органами управления, не следил за зеркалами</li>
+      <li>Заглох (по совокупности)</li>
+    </ul>
+
+    <div style="font-size:11px;color:#666;margin-top:10px;border-top:1px solid #eee;padding-top:8px">
+      Это памятка по сути регламента — баллы по отдельным пунктам сверь с действующим
+      Административным регламентом МВД и уточни у инструктора «Зебры». Формулировки периодически меняются.
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    const CENTER = [54.2099696, 37.5962440];
+    const RADIUS_KM = 2.6;
+
+    const map = L.map('map', { preferCanvas: true }).setView(CENTER, 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      crossOrigin: 'anonymous',
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker(CENTER).addTo(map)
+      .bindPopup('<b>Курковая, 9А</b><br>Автодром / МРЭО ГИБДД').openPopup();
+    L.circle(CENTER, { radius: RADIUS_KM * 1000, color:'#1769ff', weight:1, fill:false, dashArray:'6 6' }).addTo(map);
+
+    const speedLayer = L.layerGroup().addTo(map);
+    const prioLayer  = L.layerGroup();
+    const turnLayer  = L.layerGroup();
+
+    // --- цвета ---
+    function speedColor(tags) {
+      let v = tags.maxspeed;
+      if (!v) return null;
+      v = ('' + v).toLowerCase();
+      if (v.includes('living') || v === 'walk') return '#7a2ff7';
+      if (v.includes('urban')) return '#2ca02c';
+      const n = parseInt(v, 10);
+      if (isNaN(n)) return null;
+      if (n <= 20) return '#7a2ff7';
+      if (n <= 45) return '#ff7f00';
+      if (n <= 65) return '#2ca02c';
+      return '#1f77b4';
+    }
+    function prioColor(hw) {
+      if (/^(motorway|trunk|primary)/.test(hw)) return '#e31a1c';
+      if (/^secondary/.test(hw)) return '#ff7f00';
+      if (/^tertiary/.test(hw)) return '#f5c000';
+      if (hw === 'living_street') return '#2ca02c';
+      return '#888';
+    }
+
+    function latlngs(geom) { return geom.map(p => [p.lat, p.lon]); }
+
+    function render(elements) {
+      let withSpeed = 0;
+      elements.forEach(el => {
+        if (el.type !== 'way' || !el.geometry) return;
+        const tags = el.tags || {};
+        const hw = tags.highway || '';
+        const pts = latlngs(el.geometry);
+
+        // слой скорости
+        const sc = speedColor(tags);
+        if (sc) withSpeed++;
+        L.polyline(pts, {
+          color: sc || '#bbb', weight: sc ? 5 : 3, opacity: sc ? 0.9 : 0.55,
+          dashArray: sc ? null : '5 6'
+        }).bindPopup(`<b>${tags.name || hw}</b><br>Скорость: ${tags.maxspeed || '— нет в OSM'}`).addTo(speedLayer);
+
+        // слой приоритета
+        L.polyline(pts, {
+          color: prioColor(hw), weight: /^(motorway|trunk|primary|secondary)/.test(hw) ? 6 : 4, opacity: 0.85
+        }).bindPopup(`<b>${tags.name || '(без названия)'}</b><br>Тип: ${hw}`).addTo(prioLayer);
+      });
+      document.getElementById('status').textContent =
+        `Готово: ${elements.length} участков, скорость указана у ${withSpeed}.`;
+    }
+
+    // --- запрос к Overpass ---
+    function bbox() {
+      const dLat = RADIUS_KM / 111;
+      const dLon = RADIUS_KM / (111 * Math.cos(CENTER[0] * Math.PI / 180));
+      return [CENTER[0]-dLat, CENTER[1]-dLon, CENTER[0]+dLat, CENTER[1]+dLon];
+    }
+    function query() {
+      const [s,w,n,e] = bbox();
+      return `[out:json][timeout:30];
+(way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$"](${s},${w},${n},${e}););
+out geom;`;
+    }
+    // точки для разворотов
+    function turnQuery() {
+      const [s,w,n,e] = bbox();
+      const box = `(${s},${w},${n},${e})`;
+      return `[out:json][timeout:30];
+(node["highway"="traffic_signals"]${box};
+ node["highway"="crossing"]${box};
+ node["highway"="bus_stop"]${box};
+ node["railway"="level_crossing"]${box};);
+out;`;
+    }
+    function renderTurns(elements) {
+      const styles = {
+        traffic_signals: ['#2ca02c', 'Светофор/перекрёсток — обычно можно развернуться'],
+        crossing:        ['#e31a1c', 'Пешеходный переход — разворот ЗАПРЕЩЁН'],
+        bus_stop:        ['#ff7f00', 'Остановка маршрутных ТС — разворот ЗАПРЕЩЁН'],
+        level_crossing:  ['#111111', 'Ж/д переезд — разворот ЗАПРЕЩЁН'],
+      };
+      elements.forEach(el => {
+        if (el.type !== 'node') return;
+        const t = el.tags || {};
+        const kind = t.highway === 'traffic_signals' ? 'traffic_signals'
+                   : t.highway === 'crossing' ? 'crossing'
+                   : t.highway === 'bus_stop' ? 'bus_stop'
+                   : t.railway === 'level_crossing' ? 'level_crossing' : null;
+        if (!kind) return;
+        const [color, text] = styles[kind];
+        L.circleMarker([el.lat, el.lon], {
+          radius: kind === 'traffic_signals' ? 6 : 5,
+          color: '#fff', weight: 1, fillColor: color, fillOpacity: 0.95
+        }).bindPopup(text).addTo(turnLayer);
+      });
+    }
+
+    const ENDPOINTS = [
+      'https://overpass-api.de/api/interpreter',
+      'https://overpass.kumi.systems/api/interpreter'
+    ];
+    async function fetchOverpass(body, i = 0) {
+      if (i >= ENDPOINTS.length) throw new Error('all endpoints failed');
+      try {
+        const res = await fetch(ENDPOINTS[i], { method: 'POST', body });
+        if (!res.ok) throw new Error(res.status);
+        return await res.json();
+      } catch (err) {
+        return fetchOverpass(body, i + 1);
+      }
+    }
+    async function load() {
+      try {
+        const roads = await fetchOverpass(query());
+        render(roads.elements || []);
+        const turns = await fetchOverpass(turnQuery());
+        renderTurns(turns.elements || []);
+      } catch (err) {
+        document.getElementById('status').innerHTML =
+          'Не удалось загрузить данные (Overpass занят). Обнови страницу через минуту.';
+      }
+    }
+    load();
+
+    // --- переключатель режимов ---
+    const buttons = { speed: 'btn-speed', prio: 'btn-prio', turn: 'btn-turn' };
+    const legends = { speed: 'legend-speed', prio: 'legend-prio', turn: 'legend-turn' };
+    const layers  = { speed: speedLayer, prio: prioLayer, turn: turnLayer };
+    let currentMode = 'speed';
+    function show(mode) {
+      currentMode = mode;
+      for (const m in buttons) {
+        document.getElementById(buttons[m]).classList.toggle('active', m === mode);
+        document.getElementById(legends[m]).style.display = m === mode ? '' : 'none';
+        if (m === mode) map.addLayer(layers[m]); else map.removeLayer(layers[m]);
+      }
+    }
+    document.getElementById('btn-speed').onclick = () => show('speed');
+    document.getElementById('btn-prio').onclick  = () => show('prio');
+    document.getElementById('btn-turn').onclick   = () => show('turn');
+
+    // --- панель штрафных баллов ---
+    const penalty = document.getElementById('penalty');
+    document.getElementById('open-penalty').onclick  = () => penalty.classList.add('open');
+    document.getElementById('close-penalty').onclick = () => penalty.classList.remove('open');
+
+    // --- экспорт в PNG ---
+    const LEGENDS = {
+      speed: [['#7a2ff7','20 — жилая зона / двор'],['#ff7f00','40'],['#2ca02c','60 — по умолчанию в городе'],['#1f77b4','70–90'],['#bbb','нет данных в OSM']],
+      prio:  [['#e31a1c','Главные магистрали'],['#ff7f00','Главные (вторичные)'],['#f5c000','Связующие улицы'],['#888','Второстепенные / жилые'],['#2ca02c','Жилая зона (20)']],
+      turn:  [['#2ca02c','Светофор/перекрёсток — можно'],['#e31a1c','Пешеходный переход — нельзя'],['#ff7f00','Остановка — нельзя'],['#111111','Ж/д переезд — нельзя']]
+    };
+    const TITLES = {
+      speed: 'Тула, Курковая 9А — ограничения скорости',
+      prio:  'Тула, Курковая 9А — главные / второстепенные',
+      turn:  'Тула, Курковая 9А — развороты'
+    };
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r); ctx.closePath();
+    }
+    function drawLegend(canvas, mode) {
+      const data = LEGENDS[mode], title = TITLES[mode];
+      const ctx = canvas.getContext('2d');
+      const s = canvas.width / document.getElementById('map').clientWidth; // device px на 1 css px
+      const pad = 12*s, rowH = 22*s, sw = 26*s, swH = 6*s, gap = 9*s, titleH = 22*s;
+      ctx.save();
+      ctx.font = `bold ${13*s}px sans-serif`;
+      let maxW = ctx.measureText(title).width;
+      ctx.font = `${12.5*s}px sans-serif`;
+      data.forEach(d => { maxW = Math.max(maxW, sw + gap + ctx.measureText(d[1]).width); });
+      const boxW = maxW + pad*2, boxH = pad*2 + titleH + rowH*data.length;
+      const x = canvas.width - boxW - 12*s, y = 12*s;
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      roundRect(ctx, x, y, boxW, boxH, 10*s); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = s; ctx.stroke();
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#111'; ctx.font = `bold ${13*s}px sans-serif`;
+      ctx.fillText(title, x + pad, y + pad + titleH/2);
+      ctx.font = `${12.5*s}px sans-serif`;
+      data.forEach((d, i) => {
+        const ry = y + pad + titleH + rowH*i + rowH/2;
+        ctx.fillStyle = d[0];
+        if (mode === 'turn') { ctx.beginPath(); ctx.arc(x + pad + sw/2, ry, swH, 0, 2*Math.PI); ctx.fill(); }
+        else { ctx.fillRect(x + pad, ry - swH/2, sw, swH); }
+        ctx.fillStyle = '#222';
+        ctx.fillText(d[1], x + pad + sw + gap, ry);
+      });
+      ctx.restore();
+    }
+    const exportBtn = document.getElementById('export-png');
+    exportBtn.onclick = async () => {
+      const orig = exportBtn.textContent;
+      exportBtn.disabled = true; exportBtn.textContent = '⏳ Готовлю PNG…';
+      try {
+        const canvas = await html2canvas(document.getElementById('map'), {
+          useCORS: true, backgroundColor: '#fff', logging: false,
+          scale: window.devicePixelRatio || 1
+        });
+        drawLegend(canvas, currentMode);
+        const url = canvas.toDataURL('image/png'); // бросит ошибку, если canvas «испорчен»
+        const a = document.createElement('a');
+        a.download = `tula-kurkovaya-${currentMode}.png`;
+        a.href = url; a.click();
+        exportBtn.textContent = '✅ Скачано';
+      } catch (e) {
+        exportBtn.textContent = '⚠️ Не вышло — см. подсказку';
+        alert('Не удалось собрать PNG: часть плиток карты не отдала CORS-разрешение.\n\n' +
+              'Что делать: подвигай/зумни карту, чтобы плитки догрузились, и нажми снова. ' +
+              'Если повторяется — сделай обычный скрин (Cmd+Shift+4).');
+      } finally {
+        setTimeout(() => { exportBtn.disabled = false; exportBtn.textContent = orig; }, 1800);
+      }
+    };
+  </script>
+</body>
+</html>
